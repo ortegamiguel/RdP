@@ -1,14 +1,22 @@
 
 package image;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.Shape;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.geom.Point2D;
+import java.awt.image.ImageObserver;
+import java.text.AttributedCharacterIterator;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.Icon;
@@ -33,6 +41,9 @@ public class asj extends javax.swing.JFrame {
     
     ArrayList<Plaza> plazas = new ArrayList<>();
     ArrayList<Transicion> transiciones = new ArrayList<>();
+    
+    Point2D.Double p1;
+    Point2D.Double p2;
     
     public asj() {
         initComponents();
@@ -62,7 +73,15 @@ public class asj extends javax.swing.JFrame {
         panel.setBackground(new java.awt.Color(254, 254, 254));
         panel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         panel.setPreferredSize(new java.awt.Dimension(800, 600));
+        panel.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                panelMouseDragged(evt);
+            }
+        });
         panel.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                panelMouseReleased(evt);
+            }
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 panelMouseClicked(evt);
             }
@@ -191,6 +210,7 @@ public class asj extends javax.swing.JFrame {
     }
     
     public void createArco(){
+        panel.setLayout(null);
         
     }
     
@@ -234,6 +254,10 @@ public class asj extends javax.swing.JFrame {
                                         + tra.getY());
                 }
                 break;
+            case 3:
+                p1.x = evt.getX();
+                p1.y = evt.getY();
+                break;
             default:
                 break;
         }
@@ -249,6 +273,20 @@ public class asj extends javax.swing.JFrame {
         aux = 3;
         btn_transicion.setSelected(false);
     }//GEN-LAST:event_btn_ArcoActionPerformed
+
+    private void panelMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelMouseDragged
+        p2.x = evt.getX();
+        p2.y = evt.getY();
+    }//GEN-LAST:event_panelMouseDragged
+
+    private void panelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelMouseReleased
+        p2.x = evt.getX();
+        p2.y = evt.getY();
+        Graphics g = this.getGraphics();
+        g.drawLine((int)p1.x, (int)p1.y, (int)p2.x, (int)p2.y);
+        p1 = null;
+        p2 = null;
+    }//GEN-LAST:event_panelMouseReleased
 
     
     public static void main(String args[]) {

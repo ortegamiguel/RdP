@@ -2,13 +2,20 @@
 package image;
 
 import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.EventQueue;
+import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 
@@ -22,6 +29,10 @@ public class asj extends javax.swing.JFrame {
     int plaza = 0;
     int transicion = 0;
     int marcaje = 0;
+    
+    ArrayList<Plaza> plazas = new ArrayList<>();
+    ArrayList transiciones = new ArrayList<>();
+    ArrayList<Coordenada> coordenadas = new ArrayList<>();
     
     public asj() {
         initComponents();
@@ -37,6 +48,7 @@ public class asj extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         btn_plaza = new javax.swing.JToggleButton();
         btn_transicion = new javax.swing.JButton();
+        btn_Arco = new javax.swing.JButton();
 
         jToggleButton2.setText("jToggleButton2");
         jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -70,17 +82,27 @@ public class asj extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Cantarell", 0, 36)); // NOI18N
         jLabel1.setText("Red de Petri");
 
-        btn_plaza.setText("Nueva Plaza");
+        btn_plaza.setText("Plaza");
+        btn_plaza.setBorder(null);
         btn_plaza.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_plazaActionPerformed(evt);
             }
         });
 
-        btn_transicion.setText("Nueva Transición");
+        btn_transicion.setText("Transición");
+        btn_transicion.setBorder(null);
         btn_transicion.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btn_transicionActionPerformed(evt);
+            }
+        });
+
+        btn_Arco.setText("Arco");
+        btn_Arco.setBorder(null);
+        btn_Arco.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_ArcoActionPerformed(evt);
             }
         });
 
@@ -95,9 +117,11 @@ public class asj extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(18, 18, 18)
-                        .addComponent(btn_plaza)
-                        .addGap(18, 18, 18)
-                        .addComponent(btn_transicion)
+                        .addComponent(btn_plaza, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btn_transicion, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btn_Arco, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -105,13 +129,10 @@ public class asj extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btn_plaza)
-                            .addComponent(btn_transicion))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 49, Short.MAX_VALUE)
+                    .addComponent(btn_plaza, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btn_transicion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btn_Arco, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(panel, javax.swing.GroupLayout.PREFERRED_SIZE, 549, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(22, 22, 22))
@@ -122,9 +143,15 @@ public class asj extends javax.swing.JFrame {
 
     
     public void createPlaza(int x, int y, int plaza) {
-        int imageWidth = 55, imageHeight = 55;
+        int imageWidth = 55, imageHeight = 55, marca = 0;
         panel.setLayout(null);
         MyMouseAdapter myMouseAdapter = new MyMouseAdapter();
+        Plaza objPLaza = new Plaza();
+        marca = Integer.parseInt( JOptionPane.showInputDialog(null,"Introduzca la marca de la Plaza", "Marca", JOptionPane.QUESTION_MESSAGE) );
+        objPLaza.setMarca(marca);
+        objPLaza.setNombrePlaza("P" + (plaza + 1));
+        
+        plazas.add(objPLaza);
         JLabel label = new JLabel("P" + (plaza + 1));
         ImageIcon icon = new ImageIcon("circulo.png");
         Icon icono = new ImageIcon(icon.getImage().getScaledInstance(imageWidth,imageHeight , Image.SCALE_DEFAULT));
@@ -143,7 +170,8 @@ public class asj extends javax.swing.JFrame {
         int imageWidth = 55, imageHeight = 55;
         panel.setLayout(null);
         MyMouseAdapter myMouseAdapter = new MyMouseAdapter();
-        JLabel label = new JLabel("T" + (transicion + 1));
+        JLabel label = new JLabel("T " + (transicion + 1));
+        transiciones.add("T " + (transicion + 1));
         ImageIcon icon = new ImageIcon("linea.png");
         Icon icono = new ImageIcon(icon.getImage().getScaledInstance(imageWidth,imageHeight , Image.SCALE_DEFAULT));
         int eb = 0;
@@ -156,7 +184,11 @@ public class asj extends javax.swing.JFrame {
         label.addMouseMotionListener(myMouseAdapter);
         panel.add(label);
     }
-
+    
+    public void createArco(){
+        
+    }
+    
     private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
         
     }//GEN-LAST:event_jToggleButton2ActionPerformed
@@ -167,16 +199,22 @@ public class asj extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_plazaActionPerformed
 
     private void panelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelMouseClicked
-        if (aux == 1) {
-            createPlaza(evt.getX(), evt.getY(), plaza);
-            panel.repaint();
-            aux=0;
-            plaza++;
-        }else if (aux == 2) {
-            createTransicion(evt.getX(), evt.getY(), transicion);
-            panel.repaint();
-            aux=0;
-            transicion++;
+        int x1, x2, y1, y2;
+        switch (aux) {
+            case 1:
+                createPlaza(evt.getX(), evt.getY(), plaza);
+                panel.repaint();
+                aux=0;
+                plaza++;
+                break;
+            case 2:
+                createTransicion(evt.getX(), evt.getY(), transicion);
+                panel.repaint();
+                aux=0;
+                transicion++;
+                break;
+            default:
+                break;
         }
   
     }//GEN-LAST:event_panelMouseClicked
@@ -185,6 +223,11 @@ public class asj extends javax.swing.JFrame {
         aux = 2;
         btn_transicion.setSelected(false);
     }//GEN-LAST:event_btn_transicionActionPerformed
+
+    private void btn_ArcoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_ArcoActionPerformed
+        aux = 3;
+        btn_transicion.setSelected(false);
+    }//GEN-LAST:event_btn_ArcoActionPerformed
 
     
     public static void main(String args[]) {
@@ -220,6 +263,7 @@ public class asj extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btn_Arco;
     private javax.swing.JToggleButton btn_plaza;
     private javax.swing.JButton btn_transicion;
     private javax.swing.JLabel jLabel1;
@@ -227,6 +271,7 @@ public class asj extends javax.swing.JFrame {
     private javax.swing.JPanel panel;
     // End of variables declaration//GEN-END:variables
 }
+
 
 
 class MyMouseAdapter extends MouseAdapter {
@@ -262,4 +307,45 @@ class MyMouseAdapter extends MouseAdapter {
    }
 }
 
+
+class DibujaArco extends JComponent {
+
+    private static final int N = 20;
+    private Point n1, n2;
+
+    public DibujaArco(int w, int h) {
+        this.setPreferredSize(new Dimension(w, h));
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        this.n1 = new Point(N, N);
+        this.n2 = new Point(getWidth() - N, getHeight() - N);
+        g.drawLine(n1.x, n1.y, n2.x, n2.y);
+        double d = n1.distance(n2);
+        this.setToolTipText(String.valueOf(d));
+        g.drawString(String.valueOf((int) d),
+            (n1.x + n2.x) / 2, (n1.y + n2.y) / 2);
+    }
+
+    private static void display() {
+        JFrame f = new JFrame("EdgeLabel");
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.add(new DibujaArco(320, 240));
+        f.pack();
+        f.setLocationRelativeTo(null);
+        f.setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        EventQueue.invokeLater(new Runnable() {
+
+            @Override
+            public void run() {
+                display();
+            }
+        });
+    }
+}
 

@@ -10,6 +10,7 @@ import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.Iterator;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -31,8 +32,7 @@ public class asj extends javax.swing.JFrame {
     int marcaje = 0;
     
     ArrayList<Plaza> plazas = new ArrayList<>();
-    ArrayList transiciones = new ArrayList<>();
-    ArrayList<Coordenada> coordenadas = new ArrayList<>();
+    ArrayList<Transicion> transiciones = new ArrayList<>();
     
     public asj() {
         initComponents();
@@ -150,7 +150,8 @@ public class asj extends javax.swing.JFrame {
         marca = Integer.parseInt( JOptionPane.showInputDialog(null,"Introduzca la marca de la Plaza", "Marca", JOptionPane.QUESTION_MESSAGE) );
         objPLaza.setMarca(marca);
         objPLaza.setNombrePlaza("P" + (plaza + 1));
-        
+        objPLaza.setX(x);
+        objPLaza.setY(y);
         plazas.add(objPLaza);
         JLabel label = new JLabel("P" + (plaza + 1));
         ImageIcon icon = new ImageIcon("circulo.png");
@@ -171,7 +172,11 @@ public class asj extends javax.swing.JFrame {
         panel.setLayout(null);
         MyMouseAdapter myMouseAdapter = new MyMouseAdapter();
         JLabel label = new JLabel("T " + (transicion + 1));
-        transiciones.add("T " + (transicion + 1));
+        Transicion obj_Transicion = new Transicion();
+        obj_Transicion.setNombreTransicion("T " + (transicion + 1));
+        obj_Transicion.setX(x);
+        obj_Transicion.setY(y);
+        transiciones.add(obj_Transicion);
         ImageIcon icon = new ImageIcon("linea.png");
         Icon icono = new ImageIcon(icon.getImage().getScaledInstance(imageWidth,imageHeight , Image.SCALE_DEFAULT));
         int eb = 0;
@@ -206,12 +211,28 @@ public class asj extends javax.swing.JFrame {
                 panel.repaint();
                 aux=0;
                 plaza++;
+                Iterator<Plaza> itr = plazas.iterator();
+                while(itr.hasNext()){
+                        Plaza pla = itr.next();
+                        System.out.println(pla.getNombrePlaza() + " "
+                                        + pla.getMarca() + "-"
+                                        + pla.getX() + " "
+                                        + pla.getY());
+                }
                 break;
             case 2:
                 createTransicion(evt.getX(), evt.getY(), transicion);
                 panel.repaint();
                 aux=0;
                 transicion++;
+                Iterator<Transicion> itrT = transiciones.iterator();
+                while(itrT.hasNext()){
+                        Transicion tra = itrT.next();
+                        
+                        System.out.println(tra.getNombreTransicion() + " "
+                                        + tra.getX() + "-"
+                                        + tra.getY());
+                }
                 break;
             default:
                 break;

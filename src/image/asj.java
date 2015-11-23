@@ -1,22 +1,15 @@
 
 package image;
 
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import java.awt.Font;
-import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.Rectangle;
-import java.awt.Shape;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Point2D;
-import java.awt.image.ImageObserver;
-import java.text.AttributedCharacterIterator;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.Icon;
@@ -41,9 +34,11 @@ public class asj extends javax.swing.JFrame {
     
     ArrayList<Plaza> plazas = new ArrayList<>();
     ArrayList<Transicion> transiciones = new ArrayList<>();
+    ArrayList<JLabel> lebeles = new ArrayList<>();
     
-    Point2D.Double p1;
-    Point2D.Double p2;
+    
+    int p1;
+    int p2;
     
     public asj() {
         initComponents();
@@ -73,14 +68,9 @@ public class asj extends javax.swing.JFrame {
         panel.setBackground(new java.awt.Color(254, 254, 254));
         panel.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
         panel.setPreferredSize(new java.awt.Dimension(800, 600));
-        panel.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
-            public void mouseDragged(java.awt.event.MouseEvent evt) {
-                panelMouseDragged(evt);
-            }
-        });
         panel.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                panelMouseReleased(evt);
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                panelMousePressed(evt);
             }
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 panelMouseClicked(evt);
@@ -91,7 +81,7 @@ public class asj extends javax.swing.JFrame {
         panel.setLayout(panelLayout);
         panelLayout.setHorizontalGroup(
             panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 855, Short.MAX_VALUE)
+            .addGap(0, 879, Short.MAX_VALUE)
         );
         panelLayout.setVerticalGroup(
             panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -131,18 +121,15 @@ public class asj extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panel, javax.swing.GroupLayout.DEFAULT_SIZE, 857, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(18, 18, 18)
-                        .addComponent(btn_plaza, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btn_transicion, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btn_Arco, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addComponent(btn_plaza, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btn_transicion, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btn_Arco, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(422, Short.MAX_VALUE))
+            .addComponent(panel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 881, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -183,6 +170,7 @@ public class asj extends javax.swing.JFrame {
         label.setLocation(x, y);
         label.addMouseListener(myMouseAdapter);
         label.addMouseMotionListener(myMouseAdapter);
+        lebeles.add(label);
         panel.add(label);
     }
     
@@ -209,8 +197,11 @@ public class asj extends javax.swing.JFrame {
         panel.add(label);
     }
     
+  
+    
     public void createArco(){
         panel.setLayout(null);
+        
         
     }
     
@@ -255,8 +246,9 @@ public class asj extends javax.swing.JFrame {
                 }
                 break;
             case 3:
-                p1.x = evt.getX();
-                p1.y = evt.getY();
+                Graphics g = panel.getGraphics();
+                g.drawLine(p1, p2, evt.getX(), evt.getY());
+                
                 break;
             default:
                 break;
@@ -274,19 +266,10 @@ public class asj extends javax.swing.JFrame {
         btn_transicion.setSelected(false);
     }//GEN-LAST:event_btn_ArcoActionPerformed
 
-    private void panelMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelMouseDragged
-        p2.x = evt.getX();
-        p2.y = evt.getY();
-    }//GEN-LAST:event_panelMouseDragged
-
-    private void panelMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelMouseReleased
-        p2.x = evt.getX();
-        p2.y = evt.getY();
+    private void panelMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_panelMousePressed
         Graphics g = this.getGraphics();
-        g.drawLine((int)p1.x, (int)p1.y, (int)p2.x, (int)p2.y);
-        p1 = null;
-        p2 = null;
-    }//GEN-LAST:event_panelMouseReleased
+        
+    }//GEN-LAST:event_panelMousePressed
 
     
     public static void main(String args[]) {
@@ -329,14 +312,23 @@ public class asj extends javax.swing.JFrame {
     private javax.swing.JToggleButton jToggleButton2;
     private javax.swing.JPanel panel;
     // End of variables declaration//GEN-END:variables
-}
-
-
-
 class MyMouseAdapter extends MouseAdapter {
 
    private Point initialLoc;
    private Point initialLocOnScreen;
+   
+   public void mouseClicked(MouseEvent e) {
+      Component comp = (Component)e.getSource();
+      
+      initialLoc = comp.getLocation();
+      initialLocOnScreen = e.getLocationOnScreen();
+      System.out.println(comp.getLocation().getX());
+      p1 = (int)comp.getLocation().getX();
+      p2 = (int)comp.getLocation().getY();
+       
+      
+      
+   }
 
    @Override
    public void mousePressed(MouseEvent e) {
@@ -388,7 +380,7 @@ class DibujaArco extends JComponent {
             (n1.x + n2.x) / 2, (n1.y + n2.y) / 2);
     }
 
-    private static void display() {
+    private void display() {
         JFrame f = new JFrame("EdgeLabel");
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         f.add(new DibujaArco(320, 240));
@@ -397,7 +389,7 @@ class DibujaArco extends JComponent {
         f.setVisible(true);
     }
 
-    public static void main(String[] args) {
+    public void main(String[] args) {
         EventQueue.invokeLater(new Runnable() {
 
             @Override
@@ -407,4 +399,10 @@ class DibujaArco extends JComponent {
         });
     }
 }
+
+
+}
+
+
+
 

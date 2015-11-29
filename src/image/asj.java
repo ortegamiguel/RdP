@@ -1,23 +1,20 @@
 
 package image;
 
+import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.event.ItemListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Vector;
-import javax.swing.DefaultComboBoxModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -35,15 +32,19 @@ public class asj extends javax.swing.JFrame {
     int plaza = 0;
     int transicion = 0;
     int marcaje = 0;
+    String splaza;
+    String strancision;
     
     ArrayList<Plaza> plazas = new ArrayList<>();
     ArrayList<Transicion> transiciones = new ArrayList<>();
-    ArrayList<JLabel> lebeles = new ArrayList<>();
-    ArrayList<String> pla = new ArrayList<>();
+    ArrayList<JLabel> labelPlaza = new ArrayList<>();
+    ArrayList<JLabel> labelTran = new ArrayList<>();
     
     
-    int p1;
-    int p2;
+    int p1x;
+    int p1y;
+    int p2x;
+    int p2y;
     
     public asj() {
         initComponents();
@@ -64,6 +65,8 @@ public class asj extends javax.swing.JFrame {
         btn_crearArco = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
+        dirección = new javax.swing.JComboBox<>();
+        jLabel4 = new javax.swing.JLabel();
 
         jToggleButton2.setText("jToggleButton2");
         jToggleButton2.addActionListener(new java.awt.event.ActionListener() {
@@ -116,20 +119,37 @@ public class asj extends javax.swing.JFrame {
             }
         });
 
-        plazas_CB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "OO" }));
+        plazas_CB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "..." }));
         plazas_CB.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 plazas_CBActionPerformed(evt);
             }
         });
 
+        transicion_CB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "..." }));
+        transicion_CB.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                transicion_CBActionPerformed(evt);
+            }
+        });
+
         btn_crearArco.setText("Agregar Arco");
+        btn_crearArco.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_crearArcoActionPerformed(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Cantarell", 0, 18)); // NOI18N
         jLabel2.setText("Plazas");
 
         jLabel3.setFont(new java.awt.Font("Cantarell", 0, 18)); // NOI18N
         jLabel3.setText("Transiciones");
+
+        dirección.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--->", "<---" }));
+
+        jLabel4.setFont(new java.awt.Font("Cantarell", 0, 18)); // NOI18N
+        jLabel4.setText("Dirección");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -138,7 +158,9 @@ public class asj extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(panel, javax.swing.GroupLayout.DEFAULT_SIZE, 1129, Short.MAX_VALUE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(panel, javax.swing.GroupLayout.DEFAULT_SIZE, 1129, Short.MAX_VALUE)
+                        .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(18, 18, 18)
@@ -146,34 +168,47 @@ public class asj extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btn_transicion, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel2)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(plazas_CB, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(plazas_CB, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(transicion_CB, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(btn_crearArco)
-                        .addGap(0, 299, Short.MAX_VALUE)))
-                .addContainerGap())
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btn_crearArco, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(42, 42, 42))
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(dirección, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(29, 29, 29)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
+                                .addComponent(transicion_CB, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(152, 152, 152))))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
-                        .addComponent(btn_crearArco, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btn_plaza, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jLabel2))
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(btn_transicion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(plazas_CB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel3)
-                        .addComponent(transicion_CB, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(21, 21, 21)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btn_plaza, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(btn_transicion, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(plazas_CB)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(dirección, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(transicion_CB))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btn_crearArco, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGap(7, 7, 7)
                 .addComponent(panel, javax.swing.GroupLayout.PREFERRED_SIZE, 559, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -204,7 +239,7 @@ public class asj extends javax.swing.JFrame {
         label.setLocation(x, y);
         label.addMouseListener(myMouseAdapter);
         label.addMouseMotionListener(myMouseAdapter);
-        lebeles.add(label);
+        labelPlaza.add(label);
         panel.add(label);
     }
     
@@ -228,6 +263,7 @@ public class asj extends javax.swing.JFrame {
         label.setLocation(x, y);
         label.addMouseListener(myMouseAdapter);
         label.addMouseMotionListener(myMouseAdapter);
+        labelTran.add(label);
         panel.add(label);
     }
     
@@ -255,7 +291,7 @@ public class asj extends javax.swing.JFrame {
                 aux=0;
                 plaza++;
                 
-                Iterator<JLabel> itre = lebeles.iterator();
+                Iterator<JLabel> itre = labelPlaza.iterator();
                 while(itre.hasNext()){
                         JLabel pla = itre.next();
                         //System.out.println(pla.getText() + " " + pla.getX());
@@ -280,8 +316,9 @@ public class asj extends javax.swing.JFrame {
                 }
                 break;
             case 3:
+                
                 Graphics g = panel.getGraphics();
-                g.drawLine(p1, p2, evt.getX(), evt.getY());
+                g.drawLine(p1x, p1y, p2x, p2y);
                 
                 break;
             default:
@@ -301,14 +338,74 @@ public class asj extends javax.swing.JFrame {
     }//GEN-LAST:event_panelMousePressed
 
     private void plazas_CBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plazas_CBActionPerformed
-        Iterator<JLabel> itrT = lebeles.iterator();
+        //plazas_CB.removeAllItems();
+        
+        Iterator<JLabel> itrT = labelPlaza.iterator();
+        while(itrT.hasNext()){
+            JLabel tra = itrT.next();
+            plazas_CB.addItem(tra.getText());
+        }
+        splaza = (String) plazas_CB.getSelectedItem();
+       
+    }//GEN-LAST:event_plazas_CBActionPerformed
+
+    private void transicion_CBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_transicion_CBActionPerformed
+        Iterator<JLabel> itrT = labelTran.iterator();
             while(itrT.hasNext()){
                 JLabel tra = itrT.next();
-                plazas_CB.addItem(tra.getText());
+                transicion_CB.addItem(tra.getText());
             }
-        System.out.println(plazas_CB.getSelectedItem());
+        strancision = (String) transicion_CB.getSelectedItem();
+    }//GEN-LAST:event_transicion_CBActionPerformed
+
+    private void btn_crearArcoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_crearArcoActionPerformed
+        Iterator<JLabel> itrT = labelPlaza.iterator();
+        Iterator<JLabel> itrTR = labelTran.iterator();
+        while(itrT.hasNext()){
+            JLabel tra = itrT.next();
+            if (tra.getText().equals(splaza)) {
+               p1x = tra.getX() + 35;
+               p1y = tra.getY() + 40;
+            }
+        }
+        while(itrTR.hasNext()){
+            JLabel tran = itrTR.next();
+            if (tran.getText().equals(strancision)) {
+                p2x = tran.getX() + 15;
+                p2y = tran.getY() + 30;
+            }
+        }
+        //largo de la flecha
+        int dist=15;
+        //puntos para la flecha
+        int p1xf, p1yf, p2xf, p2yf;
+        double angSep=25.0, ang=0.0;
+        double ty, tx;
+        ty=-(p1y-p2y)*1.0;
+        tx=(p1x-p2x)*1.0;
+        ang=Math.atan (ty/tx);
+        if(tx<0)
+        {// si tx es negativo aumentar 180 grados
+           ang +=Math.PI;
+        }
+        p1xf=(int)(p2x+dist*Math.cos (ang-Math.toRadians (angSep)));
+        p1yf=(int)(p2y-dist*Math.sin (ang-Math.toRadians (angSep)));
+        p2xf=(int)(p2x+dist*Math.cos (ang+Math.toRadians (angSep)));
+        p2yf=(int)(p2y-dist*Math.sin (ang+Math.toRadians (angSep)));
         
-    }//GEN-LAST:event_plazas_CBActionPerformed
+        
+        
+        Graphics g = panel.getGraphics();
+        g.setColor(Color.red);
+       
+        g.drawLine(p1x, p1y, p2x, p2y);
+        g.drawLine((int)p1xf,(int)p1yf, p2x, p2y);
+        g.drawLine((int)p2xf, (int)p2yf, p2x, p2y);
+        //System.out.println(p1xf);
+        //System.out.println(p1yf);
+        //System.out.println(p2xf);
+        //System.out.println(p2yf);
+    }//GEN-LAST:event_btn_crearArcoActionPerformed
 
     
     public static void main(String args[]) {
@@ -347,9 +444,11 @@ public class asj extends javax.swing.JFrame {
     private javax.swing.JButton btn_crearArco;
     private javax.swing.JToggleButton btn_plaza;
     private javax.swing.JButton btn_transicion;
+    private javax.swing.JComboBox<String> dirección;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JToggleButton jToggleButton2;
     private javax.swing.JPanel panel;
     private javax.swing.JComboBox<String> plazas_CB;
@@ -365,9 +464,9 @@ class MyMouseAdapter extends MouseAdapter {
       
       initialLoc = comp.getLocation();
       initialLocOnScreen = e.getLocationOnScreen();
-      System.out.println(comp.getLocation().getX());
-      p1 = (int)comp.getLocation().getX();
-      p2 = (int)comp.getLocation().getY();
+      //System.out.println(comp.getLocation().getX());
+      ///p1 = (int)comp.getLocation().getX();
+      //p2 = (int)comp.getLocation().getY();
        
       
       

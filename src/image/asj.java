@@ -1,7 +1,6 @@
 
 package image;
 
-import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -37,6 +36,7 @@ public class asj extends javax.swing.JFrame {
     
     ArrayList<Plaza> plazas = new ArrayList<>();
     ArrayList<Transicion> transiciones = new ArrayList<>();
+    ArrayList<Arco> arcos = new ArrayList<>();
     ArrayList<JLabel> labelPlaza = new ArrayList<>();
     ArrayList<JLabel> labelTran = new ArrayList<>();
     

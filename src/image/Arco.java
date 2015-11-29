@@ -1,8 +1,4 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package image;
 
 /**
@@ -10,10 +6,35 @@ package image;
  * @author miguel
  */
 public class Arco {
-    private int peso;
-    private int tipo;
     private String plaza;
     private String transicion;
+    private int peso;
+    private int direccion;
+    private int px;
+    private int py;
+    private int tx;
+    private int ty;
+
+    public void setDireccion(int direccion) {
+        this.direccion = direccion;
+    }
+
+    public void setPx(int px) {
+        this.px = px;
+    }
+
+    public void setPy(int py) {
+        this.py = py;
+    }
+
+    public void setTx(int tx) {
+        this.tx = tx;
+    }
+
+    public void setTy(int ty) {
+        this.ty = ty;
+    }
+    
 
     public Arco() {
     }
@@ -26,12 +47,24 @@ public class Arco {
         this.peso = peso;
     }
 
-    public int getTipo() {
-        return tipo;
+    public int getDireccion() {
+        return direccion;
     }
 
-    public void setTipo(int tipo) {
-        this.tipo = tipo;
+    public int getPx() {
+        return px;
+    }
+
+    public int getPy() {
+        return py;
+    }
+
+    public int getTx() {
+        return tx;
+    }
+
+    public int getTy() {
+        return ty;
     }
 
     public String getPlaza() {

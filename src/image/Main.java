@@ -27,16 +27,17 @@ import javax.swing.border.EmptyBorder;
  * @author miguel
  */
 public class Main extends javax.swing.JFrame {
-
     int aux=0;
     int plaza = 0;
     int transicion = 0;
     int marcaje = 0;
     String splaza;
     String strancision;
+    String sdireccion = "-->";
     
     ArrayList<Plaza> plazas = new ArrayList<>();
     ArrayList<Transicion> transiciones = new ArrayList<>();
+    ArrayList<Arco> arcos = new ArrayList<>();
     ArrayList<JLabel> labelPlaza = new ArrayList<>();
     ArrayList<JLabel> labelTran = new ArrayList<>();
     
@@ -65,7 +66,7 @@ public class Main extends javax.swing.JFrame {
         btn_crearArco = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        dirección = new javax.swing.JComboBox<>();
+        direccion = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
 
         jToggleButton2.setText("jToggleButton2");
@@ -146,7 +147,12 @@ public class Main extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Cantarell", 0, 18)); // NOI18N
         jLabel3.setText("Transiciones");
 
-        dirección.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--->", "<---" }));
+        direccion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--->", "<---" }));
+        direccion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                direccionActionPerformed(evt);
+            }
+        });
 
         jLabel4.setFont(new java.awt.Font("Cantarell", 0, 18)); // NOI18N
         jLabel4.setText("Dirección");
@@ -180,7 +186,7 @@ public class Main extends javax.swing.JFrame {
                                 .addGap(42, 42, 42))
                             .addGroup(layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dirección, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(direccion, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(29, 29, 29)
                                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
@@ -203,7 +209,7 @@ public class Main extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(dirección, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+                                .addComponent(direccion, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
                                 .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addComponent(transicion_CB))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -249,16 +255,15 @@ public class Main extends javax.swing.JFrame {
             JLabel tra = itrT.next();
             plazas_CB.addItem(tra.getText());
         }
-        splaza = (String) plazas_CB.getSelectedItem();        
     }
     
     public void createTransicion(int x, int y, int transicion) {
         int imageWidth = 55, imageHeight = 55;
         panel.setLayout(null);
         MyMouseAdapter myMouseAdapter = new MyMouseAdapter();
-        JLabel label = new JLabel("T " + (transicion + 1));
+        JLabel label = new JLabel("T" + (transicion + 1));
         Transicion obj_Transicion = new Transicion();
-        obj_Transicion.setNombreTransicion("T " + (transicion + 1));
+        obj_Transicion.setNombreTransicion("T" + (transicion + 1));
         obj_Transicion.setX(x);
         obj_Transicion.setY(y);
         transiciones.add(obj_Transicion);
@@ -284,10 +289,46 @@ public class Main extends javax.swing.JFrame {
         }
     }
     
-  
+    public void createArco(String plaza, String transicion, int direccion, int peso){
+        Arco arco = new Arco();
+        arco.setPlaza(plaza);
+        arco.setTransicion(transicion);
+        arco.setDireccion(direccion);
+        arco.setPeso(peso);
+        //TODO: Verificar que no se añada un arco si es que ya está en la lista
+        
+        //System.out.println("Añadido arco con:" + plaza + transicion + direccion + peso);
+        arcos.add(arco);
+        updatePreMatrix();
+    }
     
-    public void createArco(){
-        panel.setLayout(null);
+    public void updatePreMatrix(){
+        int n_plazas = plazas.size();
+        int n_transiciones = transiciones.size();
+        int [][] preMatrix = new int[n_plazas][n_transiciones];
+        for (int fila = 0; fila < n_plazas; fila++){
+            for(int col = 0; col < n_transiciones; col++){
+                preMatrix[fila][col] = 0;
+            }
+        }
+        
+        for(int i=0; i<arcos.size(); i++){
+            //Recorre los arcos y por cada arco actualiza la matrix Pre
+            Arco a = arcos.get(i);
+            if(a.getDireccion()==Arco.PLAZA_A_TRANS){
+                int p_id = Integer.parseInt(a.getPlaza().substring(1))-1;
+                int t_id = Integer.parseInt(a.getTransicion().substring(1))-1;
+                int peso = a.getPeso();
+                preMatrix[p_id][t_id] = peso;
+            }            
+        }
+        System.out.println("Matriz Pre:");
+        for (int fila = 0; fila < n_plazas; fila++){
+            for(int col = 0; col < n_transiciones; col++){
+                System.out.print(preMatrix[fila][col]);
+            }
+            System.out.print("\n");
+        }
     }
     
     private void jToggleButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jToggleButton2ActionPerformed
@@ -357,7 +398,6 @@ public class Main extends javax.swing.JFrame {
     private void plazas_CBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plazas_CBActionPerformed
         //Selecciona plaza de la lista y la guarda en splaza
         splaza = (String) plazas_CB.getSelectedItem();
-       
     }//GEN-LAST:event_plazas_CBActionPerformed
 
     private void transicion_CBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_transicion_CBActionPerformed
@@ -399,20 +439,29 @@ public class Main extends javax.swing.JFrame {
         p1yf=(int)(p2y-dist*Math.sin (ang-Math.toRadians (angSep)));
         p2xf=(int)(p2x+dist*Math.cos (ang+Math.toRadians (angSep)));
         p2yf=(int)(p2y-dist*Math.sin (ang+Math.toRadians (angSep)));
-        
-        
-        
+                
         Graphics g = panel.getGraphics();
         g.setColor(Color.red);
        
         g.drawLine(p1x, p1y, p2x, p2y);
         g.drawLine((int)p1xf,(int)p1yf, p2x, p2y);
         g.drawLine((int)p2xf, (int)p2yf, p2x, p2y);
-        //System.out.println(p1xf);
-        //System.out.println(p1yf);
-        //System.out.println(p2xf);
-        //System.out.println(p2yf);
+        
+        //Se crea el objeto arco
+        int dir = 0;
+        if(sdireccion.equals("-->")){
+            dir = Arco.PLAZA_A_TRANS;
+        }else if(sdireccion.equals("<--")){
+            dir = Arco.TRANS_A_PLAZA;
+        }
+        createArco(splaza, strancision, dir, 1);
     }//GEN-LAST:event_btn_crearArcoActionPerformed
+
+    private void direccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_direccionActionPerformed
+        // TODO add your handling code here:
+        sdireccion = (String) direccion.getSelectedItem();
+        System.out.println(sdireccion);
+    }//GEN-LAST:event_direccionActionPerformed
 
     
     public static void main(String args[]) {
@@ -452,7 +501,7 @@ public class Main extends javax.swing.JFrame {
     private javax.swing.JButton btn_crearArco;
     private javax.swing.JToggleButton btn_plaza;
     private javax.swing.JButton btn_transicion;
-    private javax.swing.JComboBox<String> dirección;
+    private javax.swing.JComboBox<String> direccion;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -471,13 +520,7 @@ class MyMouseAdapter extends MouseAdapter {
       Component comp = (Component)e.getSource();
       
       initialLoc = comp.getLocation();
-      initialLocOnScreen = e.getLocationOnScreen();
-      //System.out.println(comp.getLocation().getX());
-      ///p1 = (int)comp.getLocation().getX();
-      //p2 = (int)comp.getLocation().getY();
-       
-      
-      
+      initialLocOnScreen = e.getLocationOnScreen();  
    }
 
    @Override

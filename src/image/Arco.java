@@ -6,6 +6,8 @@ package image;
  * @author miguel
  */
 public class Arco {
+    public static final int PLAZA_A_TRANS = 0;
+    public static final int TRANS_A_PLAZA = 1;
     private String plaza;
     private String transicion;
     private int peso;

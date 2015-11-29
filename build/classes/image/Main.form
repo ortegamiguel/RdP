@@ -60,7 +60,11 @@
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace max="-2" attributes="0"/>
+<<<<<<< HEAD
                               <Component id="dirección_CB" min="-2" pref="84" max="-2" attributes="0"/>
+=======
+                              <Component id="direccion" min="-2" pref="84" max="-2" attributes="0"/>
+>>>>>>> b66ba7689b14e7da4b31d3a742d0ceaef28805fb
                               <EmptySpace min="-2" pref="29" max="-2" attributes="0"/>
                               <Component id="jLabel3" min="-2" pref="100" max="-2" attributes="0"/>
                               <EmptySpace pref="45" max="32767" attributes="0"/>
@@ -91,7 +95,11 @@
                   <Group type="102" attributes="0">
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="103" groupAlignment="3" attributes="0">
+<<<<<<< HEAD
                               <Component id="dirección_CB" alignment="3" pref="40" max="32767" attributes="0"/>
+=======
+                              <Component id="direccion" alignment="3" pref="40" max="32767" attributes="0"/>
+>>>>>>> b66ba7689b14e7da4b31d3a742d0ceaef28805fb
                               <Component id="jLabel3" alignment="3" max="32767" attributes="0"/>
                           </Group>
                           <Component id="transicion_CB" max="32767" attributes="0"/>
@@ -224,7 +232,11 @@
         <Property name="text" type="java.lang.String" value="Transiciones"/>
       </Properties>
     </Component>
+<<<<<<< HEAD
     <Component class="javax.swing.JComboBox" name="direcci&#xf3;n_CB">
+=======
+    <Component class="javax.swing.JComboBox" name="direccion">
+>>>>>>> b66ba7689b14e7da4b31d3a742d0ceaef28805fb
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="2">
@@ -233,6 +245,9 @@
           </StringArray>
         </Property>
       </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="direccionActionPerformed"/>
+      </Events>
       <AuxValues>
         <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
       </AuxValues>

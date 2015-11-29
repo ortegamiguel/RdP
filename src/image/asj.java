@@ -65,7 +65,7 @@ public class asj extends javax.swing.JFrame {
         btn_crearArco = new javax.swing.JButton();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        dirección = new javax.swing.JComboBox<>();
+        dirección_CB = new javax.swing.JComboBox<>();
         jLabel4 = new javax.swing.JLabel();
 
         jToggleButton2.setText("jToggleButton2");
@@ -146,7 +146,7 @@ public class asj extends javax.swing.JFrame {
         jLabel3.setFont(new java.awt.Font("Cantarell", 0, 18)); // NOI18N
         jLabel3.setText("Transiciones");
 
-        dirección.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--->", "<---" }));
+        dirección_CB.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "--->", "<---" }));
 
         jLabel4.setFont(new java.awt.Font("Cantarell", 0, 18)); // NOI18N
         jLabel4.setText("Dirección");
@@ -180,7 +180,7 @@ public class asj extends javax.swing.JFrame {
                                 .addGap(42, 42, 42))
                             .addGroup(layout.createSequentialGroup()
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(dirección, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(dirección_CB, javax.swing.GroupLayout.PREFERRED_SIZE, 84, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(29, 29, 29)
                                 .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 45, Short.MAX_VALUE)
@@ -203,7 +203,7 @@ public class asj extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(dirección, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
+                                .addComponent(dirección_CB, javax.swing.GroupLayout.DEFAULT_SIZE, 40, Short.MAX_VALUE)
                                 .addComponent(jLabel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addComponent(transicion_CB))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -359,6 +359,13 @@ public class asj extends javax.swing.JFrame {
     }//GEN-LAST:event_transicion_CBActionPerformed
 
     private void btn_crearArcoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_crearArcoActionPerformed
+        //largo de la flecha
+        int dist=15;
+        //puntos para la flecha
+        int p1xf, p1yf, p2xf, p2yf;
+        double angSep=25.0, ang=0.0;
+        double ty, tx;
+        
         Iterator<JLabel> itrT = labelPlaza.iterator();
         Iterator<JLabel> itrTR = labelTran.iterator();
         while(itrT.hasNext()){
@@ -375,32 +382,52 @@ public class asj extends javax.swing.JFrame {
                 p2y = tran.getY() + 30;
             }
         }
-        //largo de la flecha
-        int dist=15;
-        //puntos para la flecha
-        int p1xf, p1yf, p2xf, p2yf;
-        double angSep=25.0, ang=0.0;
-        double ty, tx;
-        ty=-(p1y-p2y)*1.0;
-        tx=(p1x-p2x)*1.0;
-        ang=Math.atan (ty/tx);
-        if(tx<0)
-        {// si tx es negativo aumentar 180 grados
-           ang +=Math.PI;
+        
+        if (dirección_CB.getSelectedItem().equals("--->")) {
+            ty=-(p1y-p2y)*1.0;
+            tx=(p1x-p2x)*1.0;
+            ang=Math.atan (ty/tx);
+            if(tx<0)
+            {// si tx es negativo aumentar 180 grados
+               ang +=Math.PI;
+            }
+            p1xf=(int)(p2x+dist*Math.cos (ang-Math.toRadians (angSep)));
+            p1yf=(int)(p2y-dist*Math.sin (ang-Math.toRadians (angSep)));
+            p2xf=(int)(p2x+dist*Math.cos (ang+Math.toRadians (angSep)));
+            p2yf=(int)(p2y-dist*Math.sin (ang+Math.toRadians (angSep)));
+
+
+
+            Graphics g = panel.getGraphics();
+            g.setColor(Color.red);
+
+            g.drawLine(p1x, p1y, p2x, p2y);
+            g.drawLine((int)p1xf,(int)p1yf, p2x, p2y);
+            g.drawLine((int)p2xf, (int)p2yf, p2x, p2y);
+        }else{
+            ty=-(p2y-p1y)*1.0;
+            tx=(p2x-p1x)*1.0;
+            ang=Math.atan (ty/tx);
+            if(tx<0)
+            {// si tx es negativo aumentar 180 grados
+               ang +=Math.PI;
+            }
+            p1xf=(int)(p1x+dist*Math.cos (ang-Math.toRadians (angSep)));
+            p1yf=(int)(p1y-dist*Math.sin (ang-Math.toRadians (angSep)));
+            p2xf=(int)(p1x+dist*Math.cos (ang+Math.toRadians (angSep)));
+            p2yf=(int)(p1y-dist*Math.sin (ang+Math.toRadians (angSep)));
+
+
+
+            Graphics g = panel.getGraphics();
+            g.setColor(Color.blue);
+            g.drawString("Hello", 10, 10);
+            g.drawLine(p1x, p1y, p2x, p2y);
+            g.drawLine((int)p1xf,(int)p1yf, p1x, p1y);
+            g.drawLine((int)p2xf, (int)p2yf, p1x, p1y);
         }
-        p1xf=(int)(p2x+dist*Math.cos (ang-Math.toRadians (angSep)));
-        p1yf=(int)(p2y-dist*Math.sin (ang-Math.toRadians (angSep)));
-        p2xf=(int)(p2x+dist*Math.cos (ang+Math.toRadians (angSep)));
-        p2yf=(int)(p2y-dist*Math.sin (ang+Math.toRadians (angSep)));
         
         
-        
-        Graphics g = panel.getGraphics();
-        g.setColor(Color.red);
-       
-        g.drawLine(p1x, p1y, p2x, p2y);
-        g.drawLine((int)p1xf,(int)p1yf, p2x, p2y);
-        g.drawLine((int)p2xf, (int)p2yf, p2x, p2y);
         //System.out.println(p1xf);
         //System.out.println(p1yf);
         //System.out.println(p2xf);
@@ -444,7 +471,7 @@ public class asj extends javax.swing.JFrame {
     private javax.swing.JButton btn_crearArco;
     private javax.swing.JToggleButton btn_plaza;
     private javax.swing.JButton btn_transicion;
-    private javax.swing.JComboBox<String> dirección;
+    private javax.swing.JComboBox<String> dirección_CB;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

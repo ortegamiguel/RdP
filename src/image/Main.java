@@ -1,6 +1,7 @@
 
 package image;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -25,7 +26,7 @@ import javax.swing.border.EmptyBorder;
  *
  * @author miguel
  */
-public class asj extends javax.swing.JFrame {
+public class Main extends javax.swing.JFrame {
 
     int aux=0;
     int plaza = 0;
@@ -36,7 +37,6 @@ public class asj extends javax.swing.JFrame {
     
     ArrayList<Plaza> plazas = new ArrayList<>();
     ArrayList<Transicion> transiciones = new ArrayList<>();
-    ArrayList<Arco> arcos = new ArrayList<>();
     ArrayList<JLabel> labelPlaza = new ArrayList<>();
     ArrayList<JLabel> labelTran = new ArrayList<>();
     
@@ -46,7 +46,7 @@ public class asj extends javax.swing.JFrame {
     int p2x;
     int p2y;
     
-    public asj() {
+    public Main() {
         initComponents();
     }
 
@@ -241,6 +241,15 @@ public class asj extends javax.swing.JFrame {
         label.addMouseMotionListener(myMouseAdapter);
         labelPlaza.add(label);
         panel.add(label);
+        
+        //Actualizar lista de plazas en el comboBox
+        plazas_CB.removeAllItems();
+        Iterator<JLabel> itrT = labelPlaza.iterator();
+        while(itrT.hasNext()){
+            JLabel tra = itrT.next();
+            plazas_CB.addItem(tra.getText());
+        }
+        splaza = (String) plazas_CB.getSelectedItem();        
     }
     
     public void createTransicion(int x, int y, int transicion) {
@@ -265,6 +274,14 @@ public class asj extends javax.swing.JFrame {
         label.addMouseMotionListener(myMouseAdapter);
         labelTran.add(label);
         panel.add(label);
+        
+        //Actualiza la lista de transiciones
+        transicion_CB.removeAllItems();
+        Iterator<JLabel> itrT = labelTran.iterator();
+        while(itrT.hasNext()){
+            JLabel tra = itrT.next();
+            transicion_CB.addItem(tra.getText());
+        }
     }
     
   
@@ -338,23 +355,13 @@ public class asj extends javax.swing.JFrame {
     }//GEN-LAST:event_panelMousePressed
 
     private void plazas_CBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_plazas_CBActionPerformed
-        //plazas_CB.removeAllItems();
-        
-        Iterator<JLabel> itrT = labelPlaza.iterator();
-        while(itrT.hasNext()){
-            JLabel tra = itrT.next();
-            plazas_CB.addItem(tra.getText());
-        }
+        //Selecciona plaza de la lista y la guarda en splaza
         splaza = (String) plazas_CB.getSelectedItem();
        
     }//GEN-LAST:event_plazas_CBActionPerformed
 
     private void transicion_CBActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_transicion_CBActionPerformed
-        Iterator<JLabel> itrT = labelTran.iterator();
-            while(itrT.hasNext()){
-                JLabel tra = itrT.next();
-                transicion_CB.addItem(tra.getText());
-            }
+        //Selecciona la transición y la guarda en la variable strancision
         strancision = (String) transicion_CB.getSelectedItem();
     }//GEN-LAST:event_transicion_CBActionPerformed
 
@@ -422,20 +429,21 @@ public class asj extends javax.swing.JFrame {
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(asj.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(asj.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(asj.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(asj.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(Main.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
+        //</editor-fold>
         //</editor-fold>
 
         
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new asj().setVisible(true);
+                new Main().setVisible(true);
             }
         });
     }

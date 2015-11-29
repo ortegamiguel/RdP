@@ -33,7 +33,10 @@ public class Main extends javax.swing.JFrame {
     int marcaje = 0;
     String splaza;
     String strancision;
-    String sdireccion = "-->";
+    String sdireccion = "--->";
+    
+    int [][] preMatrix;
+    int [][] postMatrix;
     
     ArrayList<Plaza> plazas = new ArrayList<>();
     ArrayList<Transicion> transiciones = new ArrayList<>();
@@ -299,33 +302,44 @@ public class Main extends javax.swing.JFrame {
         
         //System.out.println("Añadido arco con:" + plaza + transicion + direccion + peso);
         arcos.add(arco);
-        updatePreMatrix();
+        updateMatrices();
     }
     
-    public void updatePreMatrix(){
+    public void updateMatrices(){
         int n_plazas = plazas.size();
         int n_transiciones = transiciones.size();
-        int [][] preMatrix = new int[n_plazas][n_transiciones];
+        preMatrix = new int[n_plazas][n_transiciones];
+        postMatrix = new int[n_plazas][n_transiciones];
         for (int fila = 0; fila < n_plazas; fila++){
             for(int col = 0; col < n_transiciones; col++){
                 preMatrix[fila][col] = 0;
+                postMatrix[fila][col] = 0;
             }
         }
         
         for(int i=0; i<arcos.size(); i++){
             //Recorre los arcos y por cada arco actualiza la matrix Pre
             Arco a = arcos.get(i);
+            int p_id = Integer.parseInt(a.getPlaza().substring(1))-1;
+            int t_id = Integer.parseInt(a.getTransicion().substring(1))-1;
+            int peso = a.getPeso();
             if(a.getDireccion()==Arco.PLAZA_A_TRANS){
-                int p_id = Integer.parseInt(a.getPlaza().substring(1))-1;
-                int t_id = Integer.parseInt(a.getTransicion().substring(1))-1;
-                int peso = a.getPeso();
                 preMatrix[p_id][t_id] = peso;
-            }            
+            }else if(a.getDireccion()==Arco.TRANS_A_PLAZA){
+                postMatrix[p_id][t_id] = peso;
+            }
         }
         System.out.println("Matriz Pre:");
         for (int fila = 0; fila < n_plazas; fila++){
             for(int col = 0; col < n_transiciones; col++){
                 System.out.print(preMatrix[fila][col]);
+            }
+            System.out.print("\n");
+        }
+        System.out.println("Matriz Post:");
+        for (int fila = 0; fila < n_plazas; fila++){
+            for(int col = 0; col < n_transiciones; col++){
+                System.out.print(postMatrix[fila][col]);
             }
             System.out.print("\n");
         }
@@ -449,9 +463,9 @@ public class Main extends javax.swing.JFrame {
         
         //Se crea el objeto arco
         int dir = 0;
-        if(sdireccion.equals("-->")){
+        if(sdireccion.equals("--->")){
             dir = Arco.PLAZA_A_TRANS;
-        }else if(sdireccion.equals("<--")){
+        }else if(sdireccion.equals("<---")){
             dir = Arco.TRANS_A_PLAZA;
         }
         createArco(splaza, strancision, dir, 1);
